@@ -1,0 +1,15 @@
+{
+    "name": "tyron/team-training-app",
+    "autoload": {
+        "psr-4": {
+            "TeamTraining\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "8e03bc23-1e10-4919-ab35-2477569e9f59",
+            "email": "hi@tyronejroberts.co.uk"
+        }
+    ],
+    "require": {}
+}
