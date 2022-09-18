@@ -21,6 +21,11 @@ class Routes
             'methods' => 'POST',
             'callback' => 'TeamTraining\API\User::validateEmail',
         ) );
+
+        register_rest_route( 'tt/v1', '/programmes', array(
+            'methods' => 'GET',
+            'callback' => ['TeamTraining\API\Programmes', 'getProgrammes']
+        ));
         
     }
 
