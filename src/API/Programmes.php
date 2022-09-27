@@ -30,7 +30,12 @@ class Programmes
                 'cycles' => get_field('cycles', $post),
                 'duration' => get_field('duration', $post),
                 'focus' => $focus ? $focus[0]->name : null,
-                'header_image' => $header_image ? $header_image : $post_thumbnail
+                'header_image' => $header_image ? $header_image : $post_thumbnail,
+                'subtitle' => get_field('subtitle', $post),
+                'quick_stats' => get_field('quick_stats', $post),
+                'overview' => get_field('overview', $post),
+                'equipment_list' => get_field('equipment_list', $post),
+                'introductory_video' => get_field('introductory_video', $post)
             ];
         }
 
