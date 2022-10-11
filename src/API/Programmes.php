@@ -35,7 +35,8 @@ class Programmes
                 'quick_stats' => get_field('quick_stats', $post),
                 'overview' => get_field('overview', $post),
                 'equipment_list' => get_field('equipment_list', $post),
-                'introductory_video' => get_field('introductory_video', $post)
+                'introductory_video' => get_field('introductory_video', $post),
+                'programme_cycles' => get_field('programme_cycles', $post)
             ];
         }
 

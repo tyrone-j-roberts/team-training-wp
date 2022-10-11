@@ -49,11 +49,14 @@ add_filter(
 add_filter(
 	'jwt_auth_valid_token_response',
 	function ( $response, $user, $token, $payload ) {
-					
+		
+		$profile_picture = get_field('profile_picture', "user_{$user->ID}");
+
 		$response['data'] = [
 			'firstName' => $user->first_name,
 			'lastName' => $user->last_name,
 			'email' => $user->user_email,
+			'profile_image' => $profile_picture ? $profile_picture['sizes']['medium'] : "https://eu.ui-avatars.com/api/?name={$user->first_name}+{$user->last_name}&size=400",
 			'token' => $token
 		];
 		
