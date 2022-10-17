@@ -5,12 +5,19 @@ namespace TeamTraining\API;
 class Programmes
 {
 
-    public static function getProgrammes()
+    public static function getProgrammes(\WP_REST_Request $request)
     { 
-        $posts = get_posts([
+
+        $limit = isset($request['limit']) ? intval($request['limit']) : -1;
+
+
+        $query_args = [
             'post_type' => 'programme',
-            'posts_per_page' => -1
-        ]);
+            'posts_per_page' => $limit,
+            'orderby' => 'date'
+        ];
+
+        $posts = get_posts($query_args);
 
         $programmes = [];
 
