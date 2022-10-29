@@ -30,7 +30,7 @@ class Programmes
 
             $programmes[] = [
                 'id' => $post->ID,
-                'name' => !empty($display_title) ? $display_title :r $post->post_title,
+                'name' => !empty($display_title) ? $display_title : $post->post_title,
                 'price' => get_field('price', $post),
                 'image' => $post_thumbnail,
                 'availability' => get_field('availability', $post),
