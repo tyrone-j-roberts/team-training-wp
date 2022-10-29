@@ -11,5 +11,7 @@
             "email": "hi@tyronejroberts.co.uk"
         }
     ],
-    "require": {}
+    "require": {
+        "stripe/stripe-php": "^9.8"
+    }
 }

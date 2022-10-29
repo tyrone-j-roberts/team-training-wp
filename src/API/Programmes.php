@@ -10,7 +10,6 @@ class Programmes
 
         $limit = isset($request['limit']) ? intval($request['limit']) : -1;
 
-
         $query_args = [
             'post_type' => 'programme',
             'posts_per_page' => $limit,
@@ -27,10 +26,12 @@ class Programmes
 
             $header_image = get_field('header_image', $post);
             $post_thumbnail = has_post_thumbnail($post) ? get_the_post_thumbnail_url( $post, 'large' ) : null;
+            $display_title = get_field('display_title', $post);
 
             $programmes[] = [
                 'id' => $post->ID,
-                'name' => $post->post_title,
+                'name' => !empty($display_title) ? $display_title :r $post->post_title,
+                'price' => get_field('price', $post),
                 'image' => $post_thumbnail,
                 'availability' => get_field('availability', $post),
                 'frequency' => get_field('frequency',  $post),
