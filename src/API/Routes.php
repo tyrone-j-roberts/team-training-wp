@@ -27,6 +27,32 @@ class Routes
             'callback' => ['TeamTraining\API\Programmes', 'getProgrammes']
         ));
         
+        register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/exercises', array(
+            'methods' => 'GET',
+            'callback' => ['TeamTraining\API\Programmes', 'getExercises']
+        ));
+
+        register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/purchase', array(
+            'methods' => 'POST',
+            'callback' => ['TeamTraining\API\Programmes', 'purchase']
+        ));
+
+        register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/begin-exercise', array(
+            'methods' => 'POST',
+            'callback' => ['TeamTraining\API\Programmes', 'userBeginExercise']
+        ));
+
+        register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/complete-exercise', array(
+            'methods' => 'POST',
+            'callback' => ['TeamTraining\API\Programmes', 'userCompleteExercise']
+        ));
+
+        register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/track-exercise', array(
+            'methods' => 'POST',
+            'callback' => ['TeamTraining\API\Programmes', 'userTrackExercise']
+        ));
+
+        
     }
 
 }

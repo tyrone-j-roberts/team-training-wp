@@ -6,3 +6,81 @@ Author URI: https://tyronejroberts.co.uk
 Requires PHP: 7.4
 Version: 1.0
 */
+
+@font-face {
+    font-family: 'TradeGothic-LT-Extended';
+    src: url('public/fonts/TradeGothic-LT-Extended.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TradeGothic-LT-Extended';
+    src: url('public/fonts/TradeGothicLTStd-BoldExt.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DMSans';
+    src: url('public/fonts/DMSans-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DMSans';
+    src: url('public/fonts/DMSans-Italic.ttf');
+    font-weight: normal;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'DMSans';
+    src: url('public/fonts/DMSans-Bold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DMSans';
+    src: url('public/fonts/DMSans-BoldItalic.ttf');
+    font-weight: bold;
+    font-style: italic;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    margin-top: 0;
+    font-family: 'TradeGothic-LT-Extended';
+    color: #ffffff;
+}
+
+body {
+    background-color: #000000;
+    color: #CBCBCB;
+    font-family: 'DMSans';
+    margin: 0;
+}
+
+a {
+    color: 'inerhit'
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+main#main {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.container {
+    padding: 0 20px;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}

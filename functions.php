@@ -7,6 +7,34 @@ if (file_exists($composer_file_path)) {
     TeamTraining\TeamTraining::init();
 }
 
+add_filter('wp_title', 'tt_fixed_home_wp_title');
+add_action('wp_enqueue_scripts', 'tt_enqueue_styles');
+
+/**
+ * Enqueues styles for the theme.
+ */
+function tt_enqueue_styles()
+{
+    wp_enqueue_script('theme-script',  get_template_directory_uri() . '/site.js', [], false, true);
+    wp_localize_script('theme-script', 'ajax_object', ['ajax_url' => admin_url( 'admin-ajax.php' ) ]);
+    wp_enqueue_style('theme-style', get_template_directory_uri() . '/style.css?t=' . time());
+}
+
+/**
+ * Customize the title for the home page, if one is not set.
+ *
+ * @param string $title The original title.
+ * @return string The title to use.
+ */
+function tt_fixed_home_wp_title($title)
+{
+    if (empty($title) && (is_home() || is_front_page())) {
+        $title = __('Home', 'textdomain') . ' | ' . get_bloginfo('description');
+    }
+	
+    return $title;
+}
+
 add_action('after_setup_theme', function() {
 	add_theme_support( 'post-thumbnails' );
 });
