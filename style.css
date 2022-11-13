@@ -64,7 +64,7 @@ body {
 }
 
 a {
-    color: 'inerhit'
+    color: inherit;
 }
 
 body * {
