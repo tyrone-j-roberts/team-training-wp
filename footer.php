@@ -9,6 +9,7 @@
                 for (var i = 0; i < aTags.length; i++) {
                   aTags[i].addEventListener('click', function(e) {
                     e.preventDefault();
+                    if (e.currentTarget.closest('#post-tags')) return;
                     var href = e.currentTarget.href;
                     window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'LinkClick', href: href }));
                   });

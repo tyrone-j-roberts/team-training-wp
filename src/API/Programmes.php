@@ -10,13 +10,25 @@ class Programmes
     public static function getProgrammes(\WP_REST_Request $request)
     { 
 
-        $limit = isset($request['limit']) ? intval($request['limit']) : -1;
+        global $wpdb;
 
+        $params = $request->get_params();
+
+        $limit = isset($params['limit']) ? intval($params['limit']) : -1;
+        $my_programmes = isset($params['user_programmes']) ? $params['user_programmes'] == 1 : false;
         $query_args = [
             'post_type' => 'programme',
             'posts_per_page' => $limit,
             'orderby' => 'date'
         ];
+
+        if ($my_programmes) {
+            $user_id = get_current_user_id();
+            $results = $wpdb->get_results("SELECT `programme_id` FROM `wp_user_programmes` WHERE `user_id` = {$user_id};", 'ARRAY_A');
+            $query_args['post__in'] = array_map(function($result) {
+                return $result['programme_id'];
+            }, $results);
+        }
 
         $posts = get_posts($query_args);
 
@@ -46,7 +58,8 @@ class Programmes
                 'overview' => get_field('overview', $post),
                 'equipment_list' => get_field('equipment_list', $post),
                 'introductory_video' => get_field('introductory_video', $post),
-                'programme_cycles' => get_field('programme_cycles', $post)
+                'programme_cycles' => get_field('programme_cycles', $post),
+                'workout_of_the_day' => false
             ];
         }
 
@@ -55,63 +68,138 @@ class Programmes
         return $response;
     }
 
+    public static function getWorkoutOfTheDay(\WP_REST_Request $request) 
+    {
+        $posts = get_posts([
+            'post_type' => 'workoutoftheday',
+            'posts_per_page' => 1,
+            'orderby' => 'date'
+        ]);
+
+        $workout = null;
+
+        if (count($posts) > 0) {
+            
+            $post = $posts[0];
+
+            $focus = get_the_terms($post, 'focus');
+
+            $header_image = get_field('header_image', $post);
+            $post_thumbnail = has_post_thumbnail($post) ? get_the_post_thumbnail_url( $post, 'large' ) : null;
+            $display_title = get_field('display_title', $post);
+
+            $workout = [
+                'id' => $post->ID,
+                'name' => !empty($display_title) ? $display_title : $post->post_title,
+                'price' => 0,
+                'image' => $post_thumbnail,
+                'availability' => get_field('availability', $post),
+                'frequency' => get_field('frequency',  $post),
+                'cycles' => get_field('cycles', $post),
+                'duration' => get_field('duration', $post),
+                'focus' => $focus ? $focus[0]->name : null,
+                'header_image' => $header_image ? $header_image : $post_thumbnail,
+                'subtitle' => get_field('subtitle', $post),
+                'quick_stats' => get_field('quick_stats', $post),
+                'overview' => get_field('overview', $post),
+                'equipment_list' => get_field('equipment_list', $post),
+                'introductory_video' => get_field('introductory_video', $post),
+                'programme_cycles' => get_field('programme_cycles', $post),
+                'workout_of_the_day' => true
+            ];
+
+        }
+
+        return new \WP_REST_Response([ 'workout' => $workout ]);
+    }
+
     public static function getExercises(\WP_REST_Request $request)
     {
         $params = $request->get_url_params();
+        $query_params = $request->get_query_params();
         $programme_id = $params['programme_id'];
 
         $post = get_post($programme_id);
 
-        if (!$post) {
+        $accepted_post_types = ['programme', 'workoutoftheday'];
+
+        if (!$post || !in_array($post->post_type, $accepted_post_types)) {
             return new \WP_REST_Response([ 'message' => "Programme #{$programme_id} not found." ], 404);
         }
 
-        $programme_start_carbon = Carbon::createFromFormat('Y-m-d H:i:s', $post->post_date)->startOfDay();
-        $today = Carbon::now()->startOfDay();
+        $response = [];
+      
+        if ($post->post_type == 'workoutoftheday') {
+            
+            $response = [
+                'past_exercises' => [],
+                'current_exercises' => []
+            ];
 
-        $exercises = get_field('weeks', $programme_id);
+            $day = get_field('day', $post->ID);
 
-        $past_exercises = [];
-        $current_exercises = [];
+            if (!empty($day['exercises'])) {
+                foreach($day['exercises'] as $key => $value) {
+                    $day['exercises'][$key]['handle'] = sanitize_title_with_dashes("{$value['title']}");
+                } 
+            }
 
-        if ($exercises) {
-            foreach($exercises as $i => $week) {
-                foreach($week['days'] as $j => $day) {
+            $today = Carbon::now()->startOfDay();
+
+            $exercise_day = [
+                'date' => $today,
+                'today' => true,
+                'day' => $day
+            ];
+
+            $response['current_exercises'] = [$exercise_day];
+
+        } else {
+            $programme_start_carbon = Carbon::createFromFormat('Y-m-d H:i:s', $post->post_date)->startOfDay();
+            $today = Carbon::now()->startOfDay();
     
-                    $day_number = $i + $j;
-                    $exercise_day_carbon = $programme_start_carbon->copy();
+            $exercises = get_field('weeks', $post->ID);
     
-                    if (($day_number) > 0) {
-                        $exercise_day_carbon->addDays($day_number);
-                    }
-
-                    if (!empty($day['exercises'])) {
-                        foreach($day['exercises'] as $key => $value) {
-                            $day['exercises'][$key]['handle'] = sanitize_title_with_dashes("{$value['title']}");
-                        } 
-                    }
-                    
-                    $exercise_day = [
-                        'date' => $exercise_day_carbon->format('c'),
-                        'today' => $exercise_day_carbon == $today,
-                        'day' => $day
-                    ];
-
-                    
+            $past_exercises = [];
+            $current_exercises = [];
     
-                    if ($exercise_day_carbon < $today) {
-                        $past_exercises[] = $exercise_day;
-                    } else {
-                        $current_exercises[] = $exercise_day;
+            if ($exercises) {
+                foreach($exercises as $i => $week) {
+                    foreach($week['days'] as $j => $day) {
+        
+                        $day_number = $i + $j;
+                        $exercise_day_carbon = $programme_start_carbon->copy();
+        
+                        if (($day_number) > 0) {
+                            $exercise_day_carbon->addDays($day_number);
+                        }
+    
+                        if (!empty($day['exercises'])) {
+                            foreach($day['exercises'] as $key => $value) {
+                                $day['exercises'][$key]['handle'] = sanitize_title_with_dashes("{$value['title']}");
+                            } 
+                        }
+                        
+                        $exercise_day = [
+                            'date' => $exercise_day_carbon->format('c'),
+                            'today' => $exercise_day_carbon == $today,
+                            'day' => $day
+                        ];
+        
+                        if ($exercise_day_carbon < $today) {
+                            $past_exercises[] = $exercise_day;
+                        } else {
+                            $current_exercises[] = $exercise_day;
+                        }
                     }
                 }
             }
+    
+            $response = [
+                'past_exercises' => $past_exercises,
+                'current_exercises' => $current_exercises
+            ];
         }
-
-        $response = [
-            'past_exercises' => $past_exercises,
-            'current_exercises' => $current_exercises
-        ];
 
         return new \WP_REST_Response($response);
 
@@ -132,7 +220,9 @@ class Programmes
 
         $post = get_post($programme_id);
 
-        if (!$post || $post->post_type != 'programme') {
+        $accepted_post_types = ['programme', 'workoutoftheday'];
+
+        if (!$post || !in_array($post->post_type, $accepted_post_types)) {
             return new \WP_REST_Response([ 'message' => "Programme #{$programme_id} not found" ], 404);
         }
 

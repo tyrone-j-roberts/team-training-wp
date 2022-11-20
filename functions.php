@@ -70,6 +70,31 @@ add_filter( 'jwt_auth_whitelist', function ( $endpoints ) {
 add_filter(
 	'jwt_auth_valid_credential_response',
 	function ( $response, $user ) {
+
+        $purchased_programmes = $wpdb->get_results("SELECT `programme_id` FROM `wp_user_programmes` WHERE `user_id` = {$user->ID};", 'ARRAY_A');
+
+        $purchased_programmes = array_map(function($purchased_programmes) {
+            return (int)$purchased_programmes['programme_id'];
+        }, $results);
+		
+		$profile_picture = get_field('profile_picture', "user_{$user->ID}");
+
+        $ts_last_week = time() - (60 * 60 * 24 * 7);
+        $date_last_week = date('Y-m-d H:i:s', $ts_last_week);
+
+        $exercises = $wpdb->get_results("SELECT * FROM `wp_user_exercises` WHERE `user_id` = {$user_id} AND `started_at` > \"{$date_last_week}\";");
+
+		$response['data'] = [
+			'firstName' => $user->first_name,
+			'lastName' => $user->last_name,
+			'email' => $user->user_email,
+			'profile_image' => $profile_picture ? $profile_picture['sizes']['medium'] : "https://eu.ui-avatars.com/api/?name={$user->first_name}+{$user->last_name}&size=400",
+			'token' => $token
+		];
+
+        $response['purchased_programmes'] = $purchased_programmes;
+        $response['exercises'] = $exercises;
+
 		return $response;
 	},
 	10,
@@ -79,8 +104,21 @@ add_filter(
 add_filter(
 	'jwt_auth_valid_token_response',
 	function ( $response, $user, $token, $payload ) {
+
+        global $wpdb;
+
+        $purchased_programmes = $wpdb->get_results("SELECT `programme_id` FROM `wp_user_programmes` WHERE `user_id` = {$user->ID};", 'ARRAY_A');
+
+        $purchased_programmes = array_map(function($purchased_programmes) {
+            return (int)$purchased_programmes['programme_id'];
+        }, $purchased_programmes);
 		
 		$profile_picture = get_field('profile_picture', "user_{$user->ID}");
+
+        $ts_last_week = time() - (60 * 60 * 24 * 7);
+        $date_last_week = date('Y-m-d H:i:s', $ts_last_week);
+
+        $exercises = $wpdb->get_results("SELECT * FROM `wp_user_exercises` WHERE `user_id` = {$user->ID} AND `started_at` > \"{$date_last_week}\";", 'ARRAY_A');
 
 		$response['data'] = [
 			'firstName' => $user->first_name,
@@ -88,7 +126,10 @@ add_filter(
 			'email' => $user->user_email,
 			'profile_image' => $profile_picture ? $profile_picture['sizes']['medium'] : "https://eu.ui-avatars.com/api/?name={$user->first_name}+{$user->last_name}&size=400",
 			'token' => $token
-		];
+		]; 
+
+        $response['purchased_programmes'] = $purchased_programmes;
+        $response['exercises'] = $exercises;
 		
 		return $response;
 	},

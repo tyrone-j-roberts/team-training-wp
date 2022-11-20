@@ -41,4 +41,18 @@ class User
         return $response;
     }
 
+    public static function getExercises(\WP_REST_Request $request)
+    {
+        global $wpdb;
+
+        $user_id = get_current_user_id();
+
+        $ts_last_week = time() - (60 * 60 * 24 * 7);
+        $date_last_week = date('Y-m-d H:i:s', $ts_last_week);
+
+        $results = $wpdb->get_results("SELECT * FROM `wp_user_exercises` WHERE `user_id` = {$user_id} AND `started_at` > \"{$date_last_week}\";");
+
+        return $results;
+    }
+
 }
