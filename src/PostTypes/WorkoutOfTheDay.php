@@ -26,12 +26,12 @@ class WorkoutOfTheDay
             'all_items'             => 'All Workouts',
             'add_new_item'          => 'Add Workout',
             'add_new'               => 'Add New Workout',
-            'new_item'              => 'New WorkoutOfTheDay',
-            'edit_item'             => 'Edit WorkoutOfTheDay',
-            'update_item'           => 'Update WorkoutOfTheDay',
-            'view_item'             => 'View WorkoutOfTheDay',
-            'view_items'            => 'View WorkoutOfTheDays',
-            'search_items'          => 'Search WorkoutOfTheDay',
+            'new_item'              => 'New Workout',
+            'edit_item'             => 'Edit Workout',
+            'update_item'           => 'Update Workout',
+            'view_item'             => 'View Workout',
+            'view_items'            => 'View Workouts',
+            'search_items'          => 'Search Workout',
             'not_found'             => 'No workouts found',
             'not_found_in_trash'    => 'No workouts found in Trash',
             'featured_image'        => 'Featured Image',
@@ -40,9 +40,9 @@ class WorkoutOfTheDay
             'use_featured_image'    => 'Use as featured image',
             'insert_into_item'      => 'Insert into item',
             'uploaded_to_this_item' => 'Uploaded to this item',
-            'items_list'            => 'WorkoutOfTheDays list',
-            'items_list_navigation' => 'WorkoutOfTheDays list navigation',
-            'filter_items_list'     => 'Filter WorkoutOfTheDays list',
+            'items_list'            => 'Workout list',
+            'items_list_navigation' => 'Workout list navigation',
+            'filter_items_list'     => 'Filter Workout list',
         );
 
         register_post_type( 'workoutoftheday', [
@@ -62,7 +62,7 @@ class WorkoutOfTheDay
             'exclude_from_search'   => false,
             'publicly_queryable'    => true,
             'capability_day'       => 'page',
-            'menu_icon'             => 'data:image/svg+xml;base64,' . base64_encode( "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\"><path d=\"M160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32zM0 192H448V464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192zM308.8 267C294.1 252.3 270.2 252.3 255.5 267L240.6 281.1L293.9 335.3L308.8 320.4C323.5 305.6 323.5 281.8 308.8 267V267zM137.6 391.4L128.5 428C127.1 433.5 128.7 439.3 132.7 443.2C136.7 447.2 142.4 448.8 147.9 447.4L184.5 438.3C190.1 436.9 195.3 433.1 199.4 429.9L271.3 357.9L217.1 304.6L146.1 376.5C141.1 380.6 139 385.8 137.6 391.4H137.6z\" fill=\"black\"/></svg>"),
+            'menu_icon'             => 'data:image/svg+xml;base64,' . base64_encode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm80 64c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h96c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80z" fill="currentColor" /></svg>'),
         ]);
     }
 
