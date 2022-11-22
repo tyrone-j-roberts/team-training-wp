@@ -59,7 +59,8 @@ class Programmes
                 'equipment_list' => get_field('equipment_list', $post),
                 'introductory_video' => get_field('introductory_video', $post),
                 'programme_cycles' => get_field('programme_cycles', $post),
-                'workout_of_the_day' => false
+                'workout_of_the_day' => false,
+                'workout_of_the_week' => false
             ];
         }
 
@@ -105,7 +106,8 @@ class Programmes
                 'equipment_list' => get_field('equipment_list', $post),
                 'introductory_video' => get_field('introductory_video', $post),
                 'programme_cycles' => get_field('programme_cycles', $post),
-                'workout_of_the_day' => true
+                'workout_of_the_day' => true,
+                'workout_of_the_week' => false
             ];
 
         }
@@ -150,7 +152,8 @@ class Programmes
                 'equipment_list' => get_field('equipment_list', $post),
                 'introductory_video' => get_field('introductory_video', $post),
                 'programme_cycles' => get_field('programme_cycles', $post),
-                'workout_of_the_day' => true
+                'workout_of_the_day' => false,
+                'workout_of_the_week' => true
             ];
 
         }
@@ -166,7 +169,7 @@ class Programmes
 
         $post = get_post($programme_id);
 
-        $accepted_post_types = ['programme', 'workoutoftheday'];
+        $accepted_post_types = ['programme', 'workoutoftheday', 'workoutoftheweek'];
 
         if (!$post || !in_array($post->post_type, $accepted_post_types)) {
             return new \WP_REST_Response([ 'message' => "Programme #{$programme_id} not found." ], 404);
@@ -203,7 +206,15 @@ class Programmes
             $programme_start_carbon = Carbon::createFromFormat('Y-m-d H:i:s', $post->post_date)->startOfDay();
             $today = Carbon::now()->startOfDay();
     
-            $exercises = get_field('weeks', $post->ID);
+            $exercises = null;
+
+            if ($post->post_type == 'workoutoftheweek') {
+                $week = get_field('week', $post->ID);
+                $exercises = [$week];
+            } else {
+                $exercises = get_field('weeks', $post->ID);
+            }
+   
     
             $past_exercises = [];
             $current_exercises = [];
@@ -265,7 +276,7 @@ class Programmes
 
         $post = get_post($programme_id);
 
-        $accepted_post_types = ['programme', 'workoutoftheday'];
+        $accepted_post_types = ['programme', 'workoutoftheday', 'workoutoftheweek'];
 
         if (!$post || !in_array($post->post_type, $accepted_post_types)) {
             return new \WP_REST_Response([ 'message' => "Programme #{$programme_id} not found" ], 404);

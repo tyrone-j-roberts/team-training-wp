@@ -31,6 +31,11 @@ class Routes
             'methods' => 'GET',
             'callback' => ['TeamTraining\API\Programmes', 'getWorkoutOfTheDay']
         ));
+
+        register_rest_route( 'tt/v1', '/programmes/workoutoftheweek', array(
+            'methods' => 'GET',
+            'callback' => ['TeamTraining\API\Programmes', 'getWorkoutOfTheWeek']
+        ));
         
         register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/exercises', array(
             'methods' => 'GET',
