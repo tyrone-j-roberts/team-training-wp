@@ -119,6 +119,7 @@ add_filter(
         $date_last_week = date('Y-m-d H:i:s', $ts_last_week);
 
         $exercises = $wpdb->get_results("SELECT * FROM `wp_user_exercises` WHERE `user_id` = {$user->ID} AND `started_at` > \"{$date_last_week}\";", 'ARRAY_A');
+        $workouts = $wpdb->get_results("SELECT * FROM `wp_completed_workouts` WHERE `user_id` = {$user->ID}");
 
 		$response['data'] = [
 			'firstName' => $user->first_name,
@@ -130,6 +131,7 @@ add_filter(
 
         $response['purchased_programmes'] = $purchased_programmes;
         $response['exercises'] = $exercises;
+        $response['completed_workouts'] = $workouts;
 		
 		return $response;
 	},

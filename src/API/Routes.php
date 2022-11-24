@@ -62,6 +62,16 @@ class Routes
             'callback' => ['TeamTraining\API\Programmes', 'userTrackExercise']
         ));
 
+        register_rest_route( 'tt/v1', 'programmes/(?P<programme_id>\S+)/complete-workout', array(
+            'methods' => 'POST',
+            'callback' => ['TeamTraining\API\Programmes', 'userCompleteWorkout']
+        ));
+
+        register_rest_route( 'tt/v1', 'tracking', array(
+            'methods' => 'GET',
+            'callback' => ['TeamTraining\API\Tracking', 'getData']
+        ));
+
         
     }
 

@@ -388,6 +388,40 @@ class Programmes
         return $exercise_row;
     }
 
+    public static function userCompleteWorkout(\WP_REST_Request $request)
+    {
+        global $wpdb;
+
+        $params = $request->get_url_params();
+        $data = $request->get_json_params();
+        $programme_id = (int)$params['programme_id'];
+        $workout_date = $data['workout_date'];
+        $user_id = get_current_user_id();
+        $post = get_post($programme_id);
+
+        if (!$post) {
+            return new \WP_REST_Response([ 'message' => "Programme #{$programme_id} not found." ], 404);
+        }
+
+        $completed_workout_row = $wpdb->get_row("SELECT * FROM `wp_completed_workouts` WHERE `programme_id` = \"{$programme_id}\" AND `date` = \"{$workout_date}\";", 'ARRAY_A');
+
+        if (!$completed_workout_row) {
+
+            $completed_workout_row = [
+                'programme_id' => $programme_id,
+                'date' => $workout_date,
+                'completed_at' => date('Y-m-d H:i:s'),
+                'user_id' => $user_id
+            ];
+
+            $wpdb->insert('wp_completed_workouts', $completed_workout_row);
+
+            $completed_workout_row['id'] = $wpdb->insert_id;
+        }
+
+        return $completed_workout_row;
+    }
+
     public static function userTrackExercise(\WP_REST_Request $request)
     {   
         global $wpdb;
@@ -408,17 +442,22 @@ class Programmes
             return new \WP_REST_Response([ 'message' => "Programme #{$programme_id} not found." ], 404);
         }
 
-        $exercise_row = $wpdb->get_row("SELECT * FROM `wp_user_exercises` WHERE `programme_id` = \"{$programme_id}\" AND `exercise_handle` = \"{$exercise_handle}\" AND `exercise_date` = {$exercise_date};", 'ARRAY_A');
+        $exercise_row = $wpdb->get_row("SELECT * FROM `wp_user_exercises` WHERE `programme_id` = \"{$programme_id}\" AND `exercise_handle` = \"{$exercise_handle}\" AND `exercise_date` = \"{$exercise_date}\";", 'ARRAY_A');
 
         if (!$exercise_row) {
             return new \WP_REST_Response([ 'message' => "User exercise #{$programme_id} \"{$exercise_handle}\" not found." ], 404);
         }
 
+        $completed_at = date('Y-m-d H:i:s');
+
         $wpdb->update('wp_user_exercises', [ 
             'tracking_value' => $tracking_value,
-            'tracking_score' => $tracking_score
+            'tracking_score' => $tracking_score,
+            'completed_at' => $completed_at
         ], [ 'id' => $exercise_row['id'] ]);
         
+        $exercise_row['tracking_value'] = $tracking_value;
+        $exercise_row['tracking_score'] = $tracking_score;
         $exercise_row['completed_at'] = $completed_at;
 
         return $exercise_row;
