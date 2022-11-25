@@ -22,6 +22,11 @@ class Routes
             'callback' => 'TeamTraining\API\User::validateEmail',
         ) );
 
+        register_rest_route( 'tt/v1', '/user/create', array(
+            'methods' => 'POST',
+            'callback' => 'TeamTraining\API\User::create',
+        ) );
+
         register_rest_route( 'tt/v1', '/programmes', array(
             'methods' => 'GET',
             'callback' => ['TeamTraining\API\Programmes', 'getProgrammes']
@@ -70,6 +75,16 @@ class Routes
         register_rest_route( 'tt/v1', 'tracking', array(
             'methods' => 'GET',
             'callback' => ['TeamTraining\API\Tracking', 'getData']
+        ));
+
+        register_rest_route( 'tt/v1', 'leaderboards', array(
+            'methods' => 'GET',
+            'callback' => ['TeamTraining\API\Leaderboards', 'getLeaderboards']
+        ));
+
+        register_rest_route( 'tt/v1', 'leaderboards/(?P<exercise_handle>\S+)', array(
+            'methods' => 'GET',
+            'callback' => ['TeamTraining\API\Leaderboards', 'getLeaderboard']
         ));
 
         

@@ -61,6 +61,7 @@ add_filter( 'jwt_auth_whitelist', function ( $endpoints ) {
     $custom_endpoints = array(
         '/wp-json/tt/v1/options/*',
 		'/wp-json/tt/v1/user/validate-email',
+        '/wp-json/tt/v1/user/create',
     );
 
     return array_unique( array_merge( $endpoints, $custom_endpoints ) );
@@ -70,6 +71,8 @@ add_filter( 'jwt_auth_whitelist', function ( $endpoints ) {
 add_filter(
 	'jwt_auth_valid_credential_response',
 	function ( $response, $user ) {
+
+        global $wpdb;
 
         $purchased_programmes = $wpdb->get_results("SELECT `programme_id` FROM `wp_user_programmes` WHERE `user_id` = {$user->ID};", 'ARRAY_A');
 
@@ -82,18 +85,20 @@ add_filter(
         $ts_last_week = time() - (60 * 60 * 24 * 7);
         $date_last_week = date('Y-m-d H:i:s', $ts_last_week);
 
-        $exercises = $wpdb->get_results("SELECT * FROM `wp_user_exercises` WHERE `user_id` = {$user_id} AND `started_at` > \"{$date_last_week}\";");
+        $exercises = $wpdb->get_results("SELECT * FROM `wp_user_exercises` WHERE `user_id` = {$user->ID} AND `started_at` > \"{$date_last_week}\";");
+        $workouts = $wpdb->get_results("SELECT * FROM `wp_completed_workouts` WHERE `user_id` = {$user->ID};");
 
 		$response['data'] = [
 			'firstName' => $user->first_name,
 			'lastName' => $user->last_name,
 			'email' => $user->user_email,
 			'profile_image' => $profile_picture ? $profile_picture['sizes']['medium'] : "https://eu.ui-avatars.com/api/?name={$user->first_name}+{$user->last_name}&size=400",
-			'token' => $token
+			'token' => $response['data']['token']
 		];
 
         $response['purchased_programmes'] = $purchased_programmes;
         $response['exercises'] = $exercises;
+        $response['completed_workouts'] = $workouts;
 
 		return $response;
 	},
