@@ -93,7 +93,15 @@ add_filter(
 			'lastName' => $user->last_name,
 			'email' => $user->user_email,
 			'profile_image' => $profile_picture ? $profile_picture['sizes']['medium'] : "https://eu.ui-avatars.com/api/?name={$user->first_name}+{$user->last_name}&size=400",
-			'token' => $response['data']['token']
+			'token' => $response['data']['token'],
+            'date_of_birth' => get_field('date_of_birth', "user_{$user->ID}"),
+            'height' => get_field('height', "user_{$user->ID}"),
+            'weight' => get_field('weight', "user_{$user->ID}"),
+            'training_location' => get_field('training_location', "user_{$user->ID}"),
+            'skillLevel' => get_field('skillLevel', "user_{$user->ID}"),
+            'frequency' => get_field('frequency', "user_{$user->ID}"),
+            'goal' => get_field('goal', "user_{$user->ID}"),
+            'focus' => get_field('focus', "user_{$user->ID}")
 		];
 
         $response['purchased_programmes'] = $purchased_programmes;
@@ -131,7 +139,15 @@ add_filter(
 			'lastName' => $user->last_name,
 			'email' => $user->user_email,
 			'profile_image' => $profile_picture ? $profile_picture['sizes']['medium'] : "https://eu.ui-avatars.com/api/?name={$user->first_name}+{$user->last_name}&size=400",
-			'token' => $token
+			'token' => $token,
+            'date_of_birth' => get_field('date_of_birth', "user_{$user->ID}"),
+            'height' => get_field('height', "user_{$user->ID}"),
+            'weight' => get_field('weight', "user_{$user->ID}"),
+            'training_location' => get_field('training_location', "user_{$user->ID}"),
+            'skillLevel' => get_field('skillLevel', "user_{$user->ID}"),
+            'frequency' => get_field('frequency', "user_{$user->ID}"),
+            'goal' => get_field('goal', "user_{$user->ID}"),
+            'focus' => get_field('focus', "user_{$user->ID}")
 		]; 
 
         $response['purchased_programmes'] = $purchased_programmes;

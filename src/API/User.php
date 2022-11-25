@@ -145,4 +145,27 @@ class User
         return $results;
     }
 
+    public static function updatePassword(\WP_REST_Request $request)
+    {
+        global $wpdb;
+
+        $data = $request->get_json_params();
+
+        $user = get_current_user();
+
+        $check = wp_check_password($data['current_password'], $user->user_pass, $user->ID);
+
+        if ($check) {
+            return new \WP_REST_Response([ "error" => "Your current password is incorrect" ]);
+        }
+
+        if (strlen($data['new_password']) < 8) {
+            return new \WP_REST_Response([ "error" => "New Password length must be greater than 8 characters" ]);
+        }
+
+        wp_set_password($data['new_password'], $user->ID);
+
+        return new \WP_REST_Response([ "success" => true ]);
+    }
+
 }

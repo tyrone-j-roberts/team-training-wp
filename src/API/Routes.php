@@ -27,6 +27,11 @@ class Routes
             'callback' => 'TeamTraining\API\User::create',
         ) );
 
+        register_rest_route( 'tt/v1', '/user/update-password', array(
+            'methods' => 'POST',
+            'callback' => 'TeamTraining\API\User::updatePassword',
+        ) );
+
         register_rest_route( 'tt/v1', '/programmes', array(
             'methods' => 'GET',
             'callback' => ['TeamTraining\API\Programmes', 'getProgrammes']
