@@ -168,4 +168,43 @@ class User
         return new \WP_REST_Response([ "success" => true ]);
     }
 
+    public static function getExerciseHistory(\WP_REST_Request $request)
+    {
+        global $wpdb;
+
+        $query_params = $request->get_query_params();
+        $user_id = get_current_user_id();
+        $limit = isset($query_params['limit']) ? (int)$query_params['limit'] : 10;
+
+        $sql = <<< SQL
+        SELECT * FROM `wp_user_exercises` 
+        WHERE `user_id` = {$user_id} AND `tracking_value` IS NOT NULL
+        GROUP BY `exercise_handle`
+        ORDER BY `completed_at` DESC 
+        LIMIT $limit
+        SQL;
+
+        $recordings_sql = <<< SQL
+        SELECT COUNT(`id`) AS count FROM `wp_user_exercises` 
+        WHERE `user_id` = 1 AND `tracking_value` IS NOT NULL
+        GROUP BY `exercise_handle`
+        ORDER BY `completed_at` DESC 
+        SQL;
+
+        $results = $wpdb->get_results($sql, 'ARRAY_A');
+        $results_recordings_count = $wpdb->get_results($recordings_sql, 'ARRAY_A');
+
+        $exercises = [];
+
+        foreach($results as $index => $result) {
+            $exercises[] = [
+                'name' => $result['exercise_title'],
+                'recordings' => $results_recordings_count[$index]['count']
+            ];
+        }
+
+        return [
+            'exercises' => $exercises
+        ];
+    }
 }
