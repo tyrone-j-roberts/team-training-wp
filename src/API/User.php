@@ -151,11 +151,11 @@ class User
 
         $data = $request->get_json_params();
 
-        $user = get_current_user();
+        $user = wp_get_current_user();
 
         $check = wp_check_password($data['current_password'], $user->user_pass, $user->ID);
 
-        if ($check) {
+        if (!$check) {
             return new \WP_REST_Response([ "error" => "Your current password is incorrect" ]);
         }
 
