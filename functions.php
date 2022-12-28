@@ -172,14 +172,24 @@ function tt_register_images_field() {
             'schema'          => null,
         )
     );
+
+    register_rest_field( 
+        'workshop',
+        'images',
+        array(
+            'get_callback'    => 'tt_get_images_urls',
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
 }
 
 function tt_get_images_urls( $object, $field_name, $request ) {
     $medium = wp_get_attachment_image_src( get_post_thumbnail_id( $object->id ), 'medium' );
-    $medium_url = $medium['0'];
+    $medium_url = $medium[0];
 
     $large = wp_get_attachment_image_src( get_post_thumbnail_id( $object->id ), 'large' );
-    $large_url = $large['0'];
+    $large_url = $large[0];
 
     return array(
         'medium' => $medium_url,
