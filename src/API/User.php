@@ -13,15 +13,7 @@ class User
             'firstName', 
             'lastName', 
             'email', 
-            'birthDate', 
-            'password', 
-            'height', 
-            'weight', 
-            'trainingLocation', 
-            'skillLevel', 
-            'frequency', 
-            'goal', 
-            'focus'
+            'password'
         ];
 
         $errors = [];
@@ -48,6 +40,43 @@ class User
             return $response;
         }
 
+        $password = $params['password'];
+
+        $user_id = wp_insert_user([
+            'user_email' => $params['email'],
+            'first_name' => $params['firstName'],
+            'last_name' => $params['lastName'],
+            'user_login' => $params['email'],
+            'user_pass' => $password
+        ]);
+
+        if (is_wp_error($user_id)) {
+            $response = new \WP_REST_Response($user_id);
+            // LogService::log(json_encode($params) . "\n" . json_encode($user_id->get_error_messages()));
+            $response->set_status( 406 );
+            return $response;
+        }
+        
+        $response = new \WP_REST_Response([ "user_id" => $user_id, "password" => $password ]);
+
+        return $response;
+    }
+
+    public static function completeOnboarding(\WP_REST_Request $request)
+    {
+        $params = $request->get_json_params();
+
+        $required_params = [
+            'birthDate',
+            'height', 
+            'weight', 
+            'trainingLocation', 
+            'skillLevel', 
+            'frequency', 
+            'goal', 
+            'focus'
+        ];
+
         $height = $params['height'];
         $height_cm = $height['unit'] =='cm' ? $height['value'] : $height['value'] * 30.48;
 
@@ -69,28 +98,20 @@ class User
             'skillLevel' => $params['skillLevel'],
             'frequency' => $params['frequency'],
             'goal' => $params['goal'],
-            'focus' => $params['focus']
+            'focus' => $params['focus'],
+            'weight_unit_preference' => $params['weight']['unit'],
+            'height_unit_preference' => $height['unit'],
+            'completed_onboarding' => 1
         ];
+        
+        $user_id = get_current_user_id();
 
-        $password = $params['password'];
-
-        $user_id = wp_insert_user([
-            'user_email' => $params['email'],
-            'first_name' => $params['firstName'],
-            'last_name' => $params['lastName'],
-            'user_login' => $params['email'],
-            'user_pass' => $password,
+        $updated_user_id = wp_update_user([
+            'ID' => $user_id,
             'meta_input' => $user_meta
         ]);
 
-        if (is_wp_error($user_id)) {
-            $response = new \WP_REST_Response($user_id);
-            // LogService::log(json_encode($params) . "\n" . json_encode($user_id->get_error_messages()));
-            $response->set_status( 406 );
-            return $response;
-        }
-        
-        $response = new \WP_REST_Response([ "user_id" => $user_id, "password" => $password ]);
+        $response = new \WP_REST_Response([ "completed_onboarding" => $updated_user_id == $user_id ]);
 
         return $response;
     }

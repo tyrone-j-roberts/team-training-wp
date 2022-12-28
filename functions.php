@@ -101,7 +101,10 @@ add_filter(
             'skillLevel' => get_field('skillLevel', "user_{$user->ID}"),
             'frequency' => get_field('frequency', "user_{$user->ID}"),
             'goal' => get_field('goal', "user_{$user->ID}"),
-            'focus' => get_field('focus', "user_{$user->ID}")
+            'focus' => get_field('focus', "user_{$user->ID}"),
+            'weight_unit_preference' => get_field('weight_unit_preference', "user_{$user->ID}"),
+            'height_unit_preference' => get_field('height_unit_preference', "user_{$user->ID}"),
+            'completed_onboarding' => get_field('completed_onboarding', "user_{$user->ID}")
 		];
 
         $response['purchased_programmes'] = $purchased_programmes;
@@ -147,7 +150,10 @@ add_filter(
             'skillLevel' => get_field('skillLevel', "user_{$user->ID}"),
             'frequency' => get_field('frequency', "user_{$user->ID}"),
             'goal' => get_field('goal', "user_{$user->ID}"),
-            'focus' => get_field('focus', "user_{$user->ID}")
+            'focus' => get_field('focus', "user_{$user->ID}"),
+            'weight_unit_preference' => get_field('weight_unit_preference', "user_{$user->ID}"),
+            'height_unit_preference' => get_field('height_unit_preference', "user_{$user->ID}"),
+            'completed_onboarding' => get_field('completed_onboarding', "user_{$user->ID}")
 		]; 
 
         $response['purchased_programmes'] = $purchased_programmes;
