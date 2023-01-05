@@ -203,9 +203,10 @@ class Programmes
             $response['current_exercises'] = [$exercise_day];
 
         } else {
-            $programme_start_carbon = Carbon::createFromFormat('Y-m-d H:i:s', $post->post_date)->startOfDay();
+            //$programme_start_carbon = Carbon::createFromFormat('Y-m-d H:i:s', $post->post_date)->startOfDay();
             $today = Carbon::now()->startOfDay();
-    
+            $programme_start_carbon = Carbon::now()->startOfDay();
+
             $exercises = null;
 
             if ($post->post_type == 'workoutoftheweek') {

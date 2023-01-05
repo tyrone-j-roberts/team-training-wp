@@ -11,6 +11,7 @@ class Programme
         add_action('init', 'TeamTraining\PostTypes\Programme::registerFocusTaxonomy');
         add_action('rest_api_init', 'TeamTraining\PostTypes\Programme::registerRestFields');
         add_filter( 'rest_Programme_collection_params', 'TeamTraining\PostTypes\Programme::addRestOrderByParams', 10, 1 );
+        add_action('add_meta_boxes', 'TeamTraining\PostTypes\Programme::addMetaBoxes' );
     }
 
     public static function registerPostType()
@@ -116,6 +117,16 @@ class Programme
                 'type'        => 'string'
             ),
         ]);
+    }
+
+    public static function addMetaBoxes()
+    {
+        add_meta_box('programme_schedule_box', 'Schedule', 'TeamTraining\PostTypes\Programme::renderScheduleMetabox', 'programme', 'advanced');
+    }
+
+    public static function renderScheduleMetabox( $post )
+    {
+        include dirname(__DIR__) . '/views/metaboxes/programme-schedule.php';
     }
 
 }

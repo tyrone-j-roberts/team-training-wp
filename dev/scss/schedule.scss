@@ -1,0 +1,87 @@
+#programme_schedule_box {
+    .inside {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.programme-schedule {
+
+    padding: 15px 12px;
+
+    * {
+        box-sizing: border-box;
+    }
+    &__weeks {
+
+    }
+    &__week {
+        display: flex;
+        .actions {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .delete-btn {
+                width: 20px;
+                padding: 0;
+                border: none;
+                background: none;
+                cursor: pointer;
+                color: #b32d2e;
+            }
+        }
+        &:first-child {
+            .programme-schedule__days {
+                border-top-width: 1px;
+            }
+        }
+       
+    }
+    &__days {
+        flex: 1;
+        display: flex;
+        border: 1px solid #c3c4c7;
+        border-top-width: 0;
+        
+    }
+    &__day {
+        flex: 1;
+        padding: 10px;
+        border-right: 1px solid #c3c4c7;
+        min-height: 240px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        &:last-child {
+            border-right: none;
+        }
+        .day-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px;
+        }
+        .actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            .button {
+                width: 100%;
+            }
+            .selectit {
+                margin-top: 10px;
+            }
+        }
+    }
+    &__actions {
+        padding: 20px 0;
+        display: flex;
+        justify-content: center;
+        button {
+            min-width: 150px;
+        }
+    }
+}
