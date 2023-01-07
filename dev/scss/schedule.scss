@@ -3,85 +3,223 @@
         padding: 0;
         margin: 0;
     }
-}
 
-.programme-schedule {
+    .programme-schedule {
 
-    padding: 15px 12px;
-
-    * {
-        box-sizing: border-box;
-    }
-    &__weeks {
-
-    }
-    &__week {
-        display: flex;
-        .actions {
-            width: 50px;
+        padding: 15px 12px;
+    
+        * {
+            box-sizing: border-box;
+        }
+        &__weeks {
+            h2 {
+                font-weight: 500;  
+                padding: 10px 0;  
+            }
+        }
+        &__week {
             display: flex;
+            .actions {
+                width: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .delete-btn {
+                    width: 20px;
+                    padding: 0;
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                    color: #b32d2e;
+                }
+            }
+        }
+        &__days {
+            flex: 1;
+            display: flex;
+            border: 1px solid #c3c4c7;
+        }
+        &__day {
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid #c3c4c7;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
+            position: relative;
+            &:last-child {
+                border-right: none;
+            }
+            .day-label {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 10px;
+            }
+            .actions {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                .button {
+                    width: 100%;
+                }
+                .selectit {
+                    margin-top: 10px;
+                }
+            }
+        }
+        &__actions {
+            padding: 20px 0;
+            display: flex;
             justify-content: center;
-            .delete-btn {
-                width: 20px;
-                padding: 0;
-                border: none;
-                background: none;
-                cursor: pointer;
-                color: #b32d2e;
+            button {
+                min-width: 150px;
             }
         }
-        &:first-child {
-            .programme-schedule__days {
-                border-top-width: 1px;
-            }
-        }
-       
     }
-    &__days {
-        flex: 1;
+    
+    .workout-editor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
         display: flex;
-        border: 1px solid #c3c4c7;
-        border-top-width: 0;
-        
-    }
-    &__day {
-        flex: 1;
-        padding: 10px;
-        border-right: 1px solid #c3c4c7;
-        min-height: 240px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
         align-items: center;
-        position: relative;
-        &:last-child {
-            border-right: none;
-        }
-        .day-label {
+        justify-content: center;
+        z-index: 9991;
+        &__curtain {
+            background: #000000;
             position: absolute;
             top: 0;
             left: 0;
-            padding: 10px;
+            bottom: 0;
+            right: 0;
+            opacity: 0.6;
         }
-        .actions {
-            width: 100%;
+        &__inner {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background-color: #ffffff;
+        }
+        &__header {
             display: flex;
-            flex-direction: column;
-            .button {
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgb(195,196,199);
+            padding: 20px;
+            .close-btn {
+                padding: 0;
+                background: none;
+                color: #000000;
+                border: none;
+                outline: none;
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }   
+            h2 {
+                font-weight: 500;
+                font-size: 20px;
+                padding: 0;
+                margin-bottom: 0;
+            }
+        }
+        &__content {
+            padding: 20px;
+            max-height: calc(100vh - 230px);
+            overflow-y: auto;
+        }
+        &__actions {
+            padding: 20px;
+            border-top: 1px solid rgb(195,196,199);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .field {
+            padding: 10px 0;
+            label {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+            input[type="text"],
+            input[type="number"] {
                 width: 100%;
             }
-            .selectit {
+            .attchment-field-populated {
+                width: 200px;
+                height: 200px;
+                border: 1px solid rgb(195,196,199);
+                position: relative;
+                img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+        &__exercise {
+            h4 {
+                margin-bottom: 10px;
+            }
+            .exercises {
+                border: 1px solid #c3c4c7;
+                margin-bottom: 20px;
+                padding: 10px;
+            }
+            .exercise {
                 margin-top: 10px;
+                border-radius: 5px;
+                -webkit-box-shadow: 0px 0px 2px 1px rgba(195,196,199,0.8);
+                -moz-box-shadow: 0px 0px 2px 1px rgba(195,196,199,0.8);
+                box-shadow: 0px 0px 2px 1px rgba(195,196,199,0.8);
+                &:first-child {
+                    margin-top: 0;
+                }
+                &__overview {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;      
+                    padding: 12px;
+                    h4 {
+                        margin: 0;
+                    }
+                    .actions {
+                        display: flex;
+                        align-items: center;
+                        .edit-btn,
+                        .remove-btn,
+                        .exercise-close-btn {
+                            background: none;
+                            border: none;
+                            padding: 0;
+                            width: 20px;
+                            cursor: pointer;
+                        }
+                        .edit-btn {
+                            margin-right: 5px;
+                            color: #2271b1;
+                        }
+                        .remove-btn {
+                            color: #b32d2e;
+                        }
+                    }
+                }
+                &__editor {
+                    padding: 12px;
+                    border-top: 1px solid rgba(195,196,199,0.8);
+                }
             }
         }
     }
-    &__actions {
-        padding: 20px 0;
-        display: flex;
-        justify-content: center;
-        button {
-            min-width: 150px;
-        }
-    }
+
 }
+
