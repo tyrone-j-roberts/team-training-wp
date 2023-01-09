@@ -17,7 +17,19 @@ export default function WorkoutEditor({ data, onClose }) {
         const newExercises = [...exercises];
         newExercises[index][field] = value;
         setExercises(newExercises);
-    }
+    };
+
+    const addExerciseVideo = (index, attachmentId) => {
+        const newExercises = [...exercises];
+        newExercises[index].videos.push(attachmentId);
+        setExercises(newExercises);
+    };
+
+    const removeExerciseVideo = (index, videoIndex) => {
+        const newExercises = [...exercises];
+        newExercises[index].videos.splice(videoIndex, 1);
+        setExercises(newExercises);
+    };
 
     const onAddExerciseClick = () => {
         const newItem = {
@@ -30,6 +42,14 @@ export default function WorkoutEditor({ data, onClose }) {
         };
         setExercises(items => [ ...items, newItem ]);
         setExerciseEditIndex(exercises.length);
+    };
+
+    const onDeleteExerciseButtonClick = (key) => {
+        const newExercises = [...exercises];
+        const removeIndex = newExercises.findIndex(exercise => exercise.key == key);
+        if (removeIndex == -1) return;
+        newExercises.splice(removeIndex, 1);
+        setExercises(newExercises);
     };
 
     return (
@@ -78,7 +98,10 @@ export default function WorkoutEditor({ data, onClose }) {
                                             exercise={exercise}
                                             updateExerciseField={updateExerciseField}
                                             open={exerciseEditIndex == index}
-                                            setEditIndex={setExerciseEditIndex} />
+                                            setEditIndex={setExerciseEditIndex}
+                                            onDeleteExerciseButtonClick={onDeleteExerciseButtonClick}
+                                            addExerciseVideo={addExerciseVideo}
+                                            removeExerciseVideo={removeExerciseVideo} />
                                 ))
                             }
                         </div>
